@@ -1,0 +1,146 @@
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="javascript:void(0);" class="logo d-flex align-items-center">
+            <img src="https://m-net.mx/Emenet_Internet/assets/img/logo1.png" alt="">
+            &nbsp;&nbsp;<span class="d-none d-lg-block">SCOSM</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn" (click)="prueba()"></i>
+    </div>
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <li *ngIf="informacionUsuario && (informacionUsuario.perfil != 'Administrador' && informacionUsuario.perfil != 'Superadministrador')" class="nav-item dropdown">
+                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    <i class="bi bi-chat-left-text"></i>
+                    <span class="badge bg-danger badge-number">{{solicitudesOrdenes.length}}</span>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
+                    style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(-25px, 35px);"
+                    data-popper-placement="bottom-end">
+                    <section *ngIf="solicitudesOrdenes.length > 0">
+                        <li class="dropdown-header">
+                            Tienes {{solicitudesOrdenes.length}} solicitud{{solicitudesOrdenes.length > 1 ? 'es' : ''}}
+                            pendiente{{solicitudesOrdenes.length > 1 ? 's' : ''}}
+                            <a *ngIf="solicitudesOrdenes.length > 3" href="javascript:void(0);"><span class="badge rounded-pill bg-primary p-2 ms-2"
+                                    [routerLink]="['solicitudes-orden']">Ver</span></a>
+                        </li>
+
+                        <section *ngFor="let solicitud of solicitudesOrdenes.slice(0, 3)">
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="notification-item" (click)="detalleSolicitud(solicitud)">
+                                <i class="bi {{solicitud.iconoPosterior ?? (solicitud.actividad == 'actualizar-cantidades' ? 'bi bi-currency-dollar' : 'bi-pencil-square')}} text-{{solicitud.fondoPosterior ?? (solicitud.actividad == 'actualizar-cantidades' ? 'success' : 'info')}}"></i>
+                                <div>
+                                    <h4>Orden #{{solicitud.data.pkTblOrdenServicio}}</h4>
+                                    <p>{{solicitud.fechaSolicitud}} | {{solicitud.tituloSolicitud}}</p>
+                                    <hr style="margin-top: 4px; margin-bottom: 4px;">
+                                    <p style="text-align: justify;">{{solicitud.motivo}}</p>
+                                </div>
+                            </li>
+                        </section>
+
+                        <li *ngIf="solicitudesOrdenes.length > 3">
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li *ngIf="solicitudesOrdenes.length > 3" class="dropdown-footer">
+                            <a href="javascript:void(0);">Ver todas mis solicitudes</a>
+                        </li>
+                    </section>
+
+                    <li *ngIf="solicitudesOrdenes.length == 0" class="dropdown-header"
+                        [routerLink]="['solicitudes-orden']">
+                        No tienes solicitudes pendientes
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="informacionUsuario && (informacionUsuario.perfil == 'Administrador' || informacionUsuario.perfil == 'Superadministrador')" class="nav-item dropdown">
+                <a class="nav-link nav-icon show" href="javascript:void(0);" data-bs-toggle="dropdown"
+                    aria-expanded="true">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge bg-primary badge-number">{{solicitudesOrdenes.length}}</span>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications"
+                    style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(-25px, 35px);"
+                    data-popper-placement="bottom-end">
+                    <section *ngIf="solicitudesOrdenes.length > 0">
+                        <li class="dropdown-header">
+                            Tienes {{solicitudesOrdenes.length}} solicitud{{solicitudesOrdenes.length > 1 ? 'es' : ''}}
+                            pendiente{{solicitudesOrdenes.length > 1 ? 's' : ''}}
+                            <a *ngIf="solicitudesOrdenes.length > 3" href="javascript:void(0);"><span class="badge rounded-pill bg-primary p-2 ms-2"
+                                    [routerLink]="['solicitudes-orden']">Ver</span></a>
+                        </li>
+
+                        <section *ngFor="let solicitud of solicitudesOrdenes.slice(0, 3)">
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            
+                            <li class="notification-item" (click)="detalleSolicitud(solicitud)">
+                                <i class="bi {{solicitud.iconoPosterior ?? (solicitud.actividad == 'actualizar-cantidades' ? 'bi bi-currency-dollar' : 'bi-pencil-square')}} text-{{solicitud.fondoPosterior ?? (solicitud.actividad == 'actualizar-cantidades' ? 'success' : 'info')}}"></i>
+                                <div>
+                                    <h4>{{solicitud.solicitante}} | Orden #{{solicitud.data.pkTblOrdenServicio}}</h4>
+                                    <p>{{solicitud.fechaSolicitud}} | {{solicitud.tituloSolicitud}}</p>
+                                    <hr style="margin-top: 4px; margin-bottom: 4px;">
+                                    <p style="text-align: justify;">{{solicitud.motivo}}</p>
+                                </div>
+                            </li>
+                        </section>
+
+                        <li *ngIf="solicitudesOrdenes.length > 3">
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li *ngIf="solicitudesOrdenes.length > 3" class="dropdown-footer">
+                            <a href="javascript:void(0);" [routerLink]="['solicitudes-orden']">Ver todas las solicitudes</a>
+                        </li>
+                    </section>
+
+                    <li *ngIf="solicitudesOrdenes.length == 0" class="dropdown-header"
+                        [routerLink]="['solicitudes-orden']">
+                        No hay solicitudes pendientes para validar
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown pe-3" *ngIf="informacionUsuario">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="javascript:void(0);"
+                    data-bs-toggle="dropdown">
+                    <img src="https://m-net.mx/scosm/images/log.png" alt="Profile" class="rounded-circle">
+                    <span class="d-none d-md-block dropdown-toggle ps-2">{{nombre}}</span>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>{{nombre}}</h6>
+                        <span>{{informacionUsuario.perfil}}</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li (click)="abrirDetallePerfil()">
+                        <a class="dropdown-item d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person"></i>
+                            <span>Mi perfil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center justify-content-center" (click)="logout()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
